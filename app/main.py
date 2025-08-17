@@ -2,7 +2,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 
-from app.plugins.i18n import init_i18n
+from app.core.plugins.i18n import init_i18n
 from app.utils.core.router import load_routers
 
 app = FastAPI()
