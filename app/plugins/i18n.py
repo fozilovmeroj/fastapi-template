@@ -1,6 +1,6 @@
 import i18n
 
-import app.config as config
+import app.core.config as config
 
 
 def init_i18n() -> None:

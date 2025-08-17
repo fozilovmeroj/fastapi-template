@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import Boolean, Column, Date, Enum, String, Integer, DateTime, ForeignKey, func
 
 from app.db import WithTimeStamp, Base
-from app.enums import GenderEnum
+from app.types.enums import GenderEnum
 
 
 def default_token_expiry() -> datetime:

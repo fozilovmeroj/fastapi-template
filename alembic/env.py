@@ -5,7 +5,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from sqlalchemy_utils import create_database, database_exists
 
-from app import config as app_config
+from app.core import config as app_config
 from app.db import Base
 from app.utils.core.alembic import import_all_models
 

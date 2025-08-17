@@ -9,13 +9,12 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase
 
-from .. import config as db_config
+from ..core import config as db_config
 
 engine: AsyncEngine = create_async_engine(db_config.DATABASE_URL)
 async_session: async_sessionmaker[AsyncSession] = async_sessionmaker(
     engine, expire_on_commit=False
 )
-
 
 class Base(DeclarativeBase):
     pass
