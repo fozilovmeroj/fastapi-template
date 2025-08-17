@@ -3,6 +3,7 @@ from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
+from sqlalchemy_utils import create_database, database_exists
 
 from app import config as app_config
 from app.db import Base
@@ -38,6 +39,8 @@ import_all_models(
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+if not database_exists(app_config.ALEMBIC_DATABASE_URL):
+    create_database(app_config.ALEMBIC_DATABASE_URL)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

@@ -1,9 +1,9 @@
 import datetime as dt
 from datetime import datetime, timedelta
 
-from sqlalchemy import Boolean, Column, Date, Enum, String, Integer, DateTime
+from sqlalchemy import Boolean, Column, Date, Enum, String, Integer, DateTime, ForeignKey, func
 
-from app.db import WithTimeStamp
+from app.db import WithTimeStamp, Base
 from app.enums import GenderEnum
 
 
@@ -31,3 +31,13 @@ class Token(WithTimeStamp):
     access_token: Column = Column(String(255), nullable=False, unique=True)
     user_id: Column = Column(Integer, nullable=False)
     expires_in: Column = Column(DateTime, default=default_token_expiry)
+
+
+class UserLogin(Base):
+    __tablename__ = "user_logins"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    ip_address = Column(String, nullable=True)
+    user_agent = Column(String, nullable=True)
+    timestamp = Column(DateTime, server_default=func.now())
