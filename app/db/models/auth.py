@@ -1,4 +1,3 @@
-import datetime as dt
 from datetime import datetime, timedelta
 
 from sqlalchemy import Boolean, Column, Date, Enum, String, Integer, DateTime, ForeignKey, func
@@ -8,7 +7,7 @@ from app.types.enums import GenderEnum
 
 
 def default_token_expiry() -> datetime:
-    return datetime.now(dt.UTC) + timedelta(days=1)
+    return datetime.now() + timedelta(days=1)
 
 
 class User(WithTimeStamp):
@@ -17,7 +16,8 @@ class User(WithTimeStamp):
     id = Column(Integer, primary_key=True)
     email: Column = Column(String(255), unique=True, nullable=False)
     name: Column = Column(String(255), nullable=False)
-    gender: Column = Column(Enum(GenderEnum), default="male")
+    password: Column = Column(String(255), nullable=False)
+    gender: Column = Column(Enum(GenderEnum, name="gender_enum"), default="male")
     date_of_birth: Column = Column(Date, nullable=True)
     phone: Column = Column(String(20), nullable=True)
     address: Column = Column(String(255), nullable=True)

@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
-from pydantic import EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from app.types.enums import GenderEnum
 
@@ -12,7 +11,7 @@ class UserSchema(BaseModel):
     name: str
     gender: GenderEnum
     date_of_birth: datetime | None
-    phone: str | None
+    phone: str
     address: str | None
     is_active: bool
     created_at: datetime
