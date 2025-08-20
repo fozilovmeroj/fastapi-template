@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 
 from sqlalchemy import Boolean, Column, Date, Enum, String, Integer, DateTime, ForeignKey, func
+from sqlalchemy.orm import relationship, mapped_column
+from sqlalchemy.orm.attributes import Mapped
 
 from app.db import WithTimeStamp, Base
 from app.types.enums import GenderEnum
@@ -13,31 +15,35 @@ def default_token_expiry() -> datetime:
 class User(WithTimeStamp):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
-    email: Column = Column(String(255), unique=True, nullable=False)
-    name: Column = Column(String(255), nullable=False)
-    password: Column = Column(String(255), nullable=False)
-    gender: Column = Column(Enum(GenderEnum, name="gender_enum"), default="male")
-    date_of_birth: Column = Column(Date, nullable=True)
-    phone: Column = Column(String(20), nullable=True)
-    address: Column = Column(String(255), nullable=True)
-    is_active: Column = Column(Boolean, default=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(unique=True)
+    name: Mapped[str]
+    password: Mapped[str]
+    gender: Mapped[GenderEnum] = mapped_column(Enum(GenderEnum, name="gender_enum"), default="male")
+    date_of_birth: Mapped[datetime | None]
+    phone: Mapped[str | None] = mapped_column(String(20))
+    address: Mapped[str | None]
+    is_active: Mapped[bool] = mapped_column(default=True)
+
+    tokens: Mapped[list["Token"]] = relationship("Token", back_populates="user")
 
 
 class Token(WithTimeStamp):
     __tablename__ = "tokens"
 
-    id = Column(Integer, primary_key=True)
-    access_token: Column = Column(String(255), nullable=False, unique=True)
-    user_id: Column = Column(Integer, nullable=False)
-    expires_in: Column = Column(DateTime, default=default_token_expiry)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    access_token: Mapped[str] = mapped_column(unique=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    expires_in: Mapped[datetime] = mapped_column(default=default_token_expiry)
+
+    user: Mapped["User"] = relationship("User", back_populates="tokens")
 
 
 class UserLogin(Base):
     __tablename__ = "user_logins"
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    ip_address = Column(String, nullable=True)
-    user_agent = Column(String, nullable=True)
-    timestamp = Column(DateTime, server_default=func.now())
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    ip_address: Mapped[str | None]
+    user_agent: Mapped[str | None]
+    timestamp: Mapped[datetime] = mapped_column(server_default=func.now())
