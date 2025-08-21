@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 from app.db import get_session
 from sqlalchemy import select
 
-from app.db.models.auth import Token
+from app.db.models.auth.auth import Token
 
 bearer_token = HTTPBearer(auto_error=True)
 

@@ -6,7 +6,7 @@ from sqlalchemy import engine_from_config, pool
 from sqlalchemy_utils import create_database, database_exists
 
 from app.core import config as app_config
-from app.db import Base
+from app.db.base_models import Base
 from app.utils.core.alembic import import_all_models
 
 # this is the Alembic Config object, which provides
@@ -32,7 +32,6 @@ import_all_models(
     "app.db.models",
     os.path.join(os.path.dirname(__file__), "..", "app", "db", "models"),
 )
-
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

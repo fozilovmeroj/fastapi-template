@@ -6,10 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from passlib.hash import bcrypt
 
 from app.db import get_session
-from app.db.models.auth import User, Token, UserLogin
+from app.db.models.auth.auth import User, Token, UserLogin
+from app.db.models.logging import Log
 from app.schemas.auth import SignInSchema, SignUpSchema, SignInResponse
 from app.schemas.users import UserSchema
+from app.types.enums.log_level import LogLevelEnum
 from app.utils.auth import get_current_user
+from app.utils.request import get_log_data
 
 router = APIRouter(tags=["auth"])
 
@@ -44,12 +47,15 @@ async def sign_in(form: SignInSchema, request: Request, session: AsyncSession = 
         access_token = secrets.token_hex(32)
         token = Token(access_token=access_token, user_id=user.id)
 
-        client_host = request.client.host
-        user_agent = request.headers.get("user-agent")
-        user_login = UserLogin(user_agent=user_agent, ip_address=client_host, user_id=user.id)
+        user_login = UserLogin(**get_log_data(request), user_id=user.id)
+
 
         session.add(token)
         session.add(user_login)
+        await session.commit()
+
+        log = Log(level=LogLevelEnum.INFO, user_id=user.id, **get_log_data(request), object=user_login, action="sign in")
+        session.add(log)
         await session.commit()
         return SignInResponse(token=access_token, user=user)
     else:

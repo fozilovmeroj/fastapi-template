@@ -1,20 +1,24 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy import String, ForeignKey, Text, Enum
+from sqlalchemy.orm import relationship, mapped_column
+from sqlalchemy.orm.attributes import Mapped
+from sqlalchemy_utils import generic_relationship
 
-from app.db import WithTimeStamp
+from app.db.base_models import WithTimeStamp
+from app.types.enums.log_level import LogLevelEnum
 
 
 class Log(WithTimeStamp):
     __tablename__ = "logs"
 
-    id = Column(Integer, primary_key=True)
-    level = Column(String(50), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    action = Column(String, nullable=False)
-    object_type = Column(String, nullable=False)
-    object_id = Column(Integer, nullable=False)
-    ip_address = Column(String(45), nullable=True)
-    user_agent = Column(String, nullable=True)
-    message = Column(Text, nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    level: Mapped[LogLevelEnum] = mapped_column(String(50), default=LogLevelEnum.INFO)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    action: Mapped[str]
+    object_type: Mapped[str]
+    object_id: Mapped[int]
+    ip_address: Mapped[str | None] = mapped_column(String(45))
+    user_agent: Mapped[str | None] = mapped_column()
+    message: Mapped[str | None] = mapped_column(Text)
 
-    user = relationship("User", back_populates="logs")
+    user: Mapped["User"] = relationship("User", back_populates="logs")
+    object = generic_relationship("object_type", "object_id")
