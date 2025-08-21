@@ -15,11 +15,9 @@ def load_routers(
         module_name = f"{base_module}.{name}"
         full_path = path / name
 
+        module = importlib.import_module(module_name)
+        if hasattr(module, "router"):
+            router = getattr(module, "router")
+            app.include_router(router, prefix=prefix + f"/{name.split('.')[0]}")
         if is_pkg:
             load_routers(app, full_path, module_name, prefix + f"/{name}")
-        else:
-            module = importlib.import_module(module_name)
-            if hasattr(module, "router"):
-                router = getattr(module, "router")
-                app.include_router(router, prefix=prefix + f"/{name.split('.')[0]}")
-                # print(f"Mounted {module_name} at {prefix}/{name.split('.')[0]}")

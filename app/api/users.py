@@ -7,7 +7,7 @@ from app.db import get_session
 from app.db.models.auth import User
 from app.schemas.users.__init__ import UserSchema
 
-router = APIRouter()
+router = APIRouter(tags=["users"])
 
 
 @router.get("/", response_model=list[UserSchema])
