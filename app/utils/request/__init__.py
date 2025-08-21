@@ -1,4 +1,4 @@
-from fastapi import Request
+from fastapi import Request, Depends
 
 def get_log_data(request: Request):
     client_host = request.client.host
