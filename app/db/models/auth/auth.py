@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import Enum, String, ForeignKey, func
+from sqlalchemy import String, ForeignKey, func
 from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.orm.attributes import Mapped
 
-from app.db.base_models import WithTimeStamp, Base
+from app.db.base_models import WithTimeStamp, Base, int_pk
 from app.types.enums import GenderEnum
 
 
@@ -15,11 +15,11 @@ def default_token_expiry() -> datetime:
 class User(WithTimeStamp):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int_pk]
     email: Mapped[str] = mapped_column(unique=True)
     name: Mapped[str]
     password: Mapped[str]
-    gender: Mapped[GenderEnum] = mapped_column(Enum(GenderEnum, name="gender_enum"), default="male")
+    gender: Mapped[GenderEnum] = mapped_column(default="male")
     date_of_birth: Mapped[datetime | None]
     phone: Mapped[str | None] = mapped_column(String(20))
     address: Mapped[str | None]
@@ -32,7 +32,7 @@ class User(WithTimeStamp):
 class Token(WithTimeStamp):
     __tablename__ = "tokens"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int_pk]
     access_token: Mapped[str] = mapped_column(unique=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     expires_in: Mapped[datetime] = mapped_column(default=default_token_expiry)
@@ -43,7 +43,7 @@ class Token(WithTimeStamp):
 class UserLogin(Base):
     __tablename__ = "user_logins"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[int_pk]
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     ip_address: Mapped[str | None]
     user_agent: Mapped[str | None]

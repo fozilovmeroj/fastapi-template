@@ -6,7 +6,7 @@ from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from app.db.models.auth.auth import User, Token, UserLogin
-from app.logic.services.log_service import LogService
+from app.services.log_service import LogService
 from app.schemas.auth import SignUpSchema, SignInSchema, SignInResponse
 from app.utils.request import get_log_data
 

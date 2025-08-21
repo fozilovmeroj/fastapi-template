@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_session
-from app.logic.services.user_service import UserService
+from app.services.user_service import UserService
 from app.schemas.auth import SignInSchema, SignUpSchema, SignInResponse
 from app.schemas.users import UserSchema
 from app.utils.auth import get_current_user
