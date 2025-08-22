@@ -1,15 +1,9 @@
-from sqlalchemy import ForeignKey, Table, Column
-from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.orm.attributes import Mapped
 
 from app.db.base_models import WithTimeStamp, int_pk, Base
 
-role_permissions_table = Table(
-    "role_permission",
-    Base.metadata,
-    Column("user_id", ForeignKey("users.id"), primary_key=True),
-    Column("group_id", ForeignKey("groups.id"), primary_key=True),
-)
 
 class Permission(Base):
     __tablename__ = "permissions"
@@ -17,7 +11,7 @@ class Permission(Base):
     id: Mapped[int_pk]
     name: Mapped[str]
 
-    roles: Mapped[list["Role"]] = relationship(secondary=role_permissions_table, back_populates="permissions")
+    roles: Mapped[list["Role"]] = relationship(secondary="role_permission", back_populates="permissions")
 
 
 class Role(WithTimeStamp):
@@ -26,4 +20,10 @@ class Role(WithTimeStamp):
     id: Mapped[int_pk]
     name: Mapped[str]
 
-    permissions: Mapped[list["Permission"]] = relationship(secondary=role_permissions_table, back_populates="roles")
+    permissions: Mapped[list["Permission"]] = relationship(secondary="role_permission", back_populates="roles")
+
+class RolePermission(Base):
+    __tablename__ = "role_permission"
+
+    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), primary_key=True)
+    permission_id: Mapped[int] = mapped_column(ForeignKey("permissions.id"), primary_key=True)

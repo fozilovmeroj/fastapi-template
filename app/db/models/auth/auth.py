@@ -19,7 +19,7 @@ class User(WithTimeStamp):
     email: Mapped[str] = mapped_column(unique=True)
     name: Mapped[str]
     password: Mapped[str]
-    gender: Mapped[GenderEnum] = mapped_column(default="male")
+    gender: Mapped[GenderEnum] = mapped_column(String(10), default="male")
     date_of_birth: Mapped[datetime | None]
     phone: Mapped[str | None] = mapped_column(String(20))
     address: Mapped[str | None]

@@ -11,7 +11,7 @@ class Log(WithTimeStamp):
     __tablename__ = "logs"
 
     id: Mapped[int_pk]
-    level: Mapped[LogLevelEnum] = mapped_column(default=LogLevelEnum.INFO)
+    level: Mapped[LogLevelEnum] = mapped_column(String(50) ,default=LogLevelEnum.INFO)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     action: Mapped[str]
     object_type: Mapped[str]
