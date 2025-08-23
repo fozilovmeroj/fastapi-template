@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from sqlalchemy import String, ForeignKey, func
 from sqlalchemy.orm import relationship, mapped_column
@@ -6,10 +6,7 @@ from sqlalchemy.orm.attributes import Mapped
 
 from app.db.base_models import WithTimeStamp, Base, int_pk
 from app.types.enums import GenderEnum
-
-
-def default_token_expiry() -> datetime:
-    return datetime.now() + timedelta(days=1)
+from app.utils.auth.token import default_token_expiry, default_code_expiry
 
 
 class User(WithTimeStamp):
@@ -27,6 +24,7 @@ class User(WithTimeStamp):
 
     tokens: Mapped[list["Token"]] = relationship("Token", back_populates="user")
     logs: Mapped[list["Log"]] = relationship("Log", back_populates="user")
+    password_resets: Mapped[list["PasswordReset"]] = relationship("PasswordReset", back_populates="user")
 
 
 class Token(WithTimeStamp):
@@ -48,3 +46,14 @@ class UserLogin(Base):
     ip_address: Mapped[str | None]
     user_agent: Mapped[str | None]
     timestamp: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class PasswordReset(Base):
+    __tablename__ = "password_resets"
+
+    id: Mapped[int_pk]
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    code: Mapped[int]
+    expires_in: Mapped[datetime] = mapped_column(default=default_code_expiry)
+
+    user: Mapped["User"] = relationship("User" ,back_populates="password_resets")

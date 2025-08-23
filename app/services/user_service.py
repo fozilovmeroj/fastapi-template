@@ -3,17 +3,20 @@ import secrets
 from fastapi import Request, HTTPException
 from passlib.hash import bcrypt
 from sqlalchemy import select, or_
-from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from app.db.models.auth.auth import User, Token, UserLogin
+from app.schemas.users import UserSchema
+from app.services import Service
 from app.services.log_service import LogService
 from app.schemas.auth import SignUpSchema, SignInSchema, SignInResponse
 from app.utils.request import get_log_data
 
 
-class UserService:
-    def __init__(self, session: AsyncSession):
-        self.session = session
+class UserService(Service):
+    async def get_user(self, login: str) -> UserSchema | None:
+        query = select(User).where(or_(User.email == login, User.phone == login))
+        user = (await self.session.execute(query)).scalars().first()
+        return UserSchema.model_validate(user) if user else None
 
     async def is_unique(self, email: str, phone: str):
         stmt = select(User).where(or_(User.email == email, User.phone == phone))
@@ -34,8 +37,7 @@ class UserService:
         return user
 
     async def sign_in(self, form: SignInSchema, request: Request) -> SignInResponse:
-        query = select(User).where(or_(User.email == form.login, User.phone == form.login))
-        user = (await self.session.execute(query)).scalars().first()
+        user = await self.get_user(form.login)
         if bcrypt.verify(form.password, user.password):
             access_token = secrets.token_hex(32)
             token = Token(access_token=access_token, user_id=user.id)

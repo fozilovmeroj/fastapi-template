@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import EmailStr
 
+from app.schemas.base import DBModel
 from app.types.enums import GenderEnum
 
 
-class UserSchema(BaseModel):
+class UserSchema(DBModel):
     id: int
     email: EmailStr
     name: str
@@ -16,5 +17,3 @@ class UserSchema(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime | None
-
-    model_config = ConfigDict(from_attributes=True)

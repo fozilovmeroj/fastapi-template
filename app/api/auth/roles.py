@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from app.db import get_session
+from app.db.connection import get_session
 from app.db.models.auth.roles import Role
 
 router = APIRouter(tags=["roles"])
