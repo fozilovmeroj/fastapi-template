@@ -13,10 +13,10 @@ from app.utils.request import get_log_data
 
 
 class UserService(Service):
-    async def get_user(self, login: str) -> UserWithPasswordSchema | None:
+    async def get_user(self, login: str) -> User | None:
         query = select(User).where(or_(User.email == login, User.phone == login))
         user = (await self.session.execute(query)).scalars().first()
-        return UserWithPasswordSchema.model_validate(user) if user else None
+        return user
 
     async def is_unique(self, email: str, phone: str):
         stmt = select(User).where(or_(User.email == email, User.phone == phone))

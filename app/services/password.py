@@ -8,11 +8,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from app.db.models.auth.auth import PasswordReset
+from app.db.models.auth.auth import PasswordReset, User
 from app.schemas.auth.password import ChangePasswordSchema
 from app.services import Service
 from app.services.user_service import UserService
-from app.utils.generators import generate_code
+from app.utils.generators import generate_code, generate_password
 
 
 class PasswordService(Service):
@@ -39,5 +39,14 @@ class PasswordService(Service):
         if not code:
             raise HTTPException(status_code=404, detail=i18n.t('user.incorrect_code'))
         code.user.password = bcrypt.hash(data.password)
+        await self.session.commit()
+        return True
+
+    async def reset_password(self, email: EmailStr):
+        user = await self.user_service.get_user(email)
+        if not user:
+            raise HTTPException(status_code=404, detail=i18n.t('user.not_found'))
+        new_password = generate_password()
+        user.password = bcrypt.hash(new_password)
         await self.session.commit()
         return True

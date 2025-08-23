@@ -27,7 +27,6 @@ async def change_password(form: ChangePasswordSchema, session=Depends(get_sessio
 
 @router.get("/reset", response_model=ResponseSchema)
 async def reset_password(email: EmailStr, session=Depends(get_session)):
-    user_service = UserService(session)
-    # if not await user_service.generate_reset_password(email):
-    #     return ResponseSchema(status=False, message=i18n.t('user.not_found'))
-    return ResponseSchema(status=True, message=i18n.t('user.code_sent'))
+    password_service = PasswordService(session)
+    await password_service.reset_password(email)
+    return ResponseSchema(status=True, message='user.password_reset')
