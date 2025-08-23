@@ -12,3 +12,7 @@ def init_i18n() -> None:
     i18n.set("locale", config.LOCALE)
     i18n.set('filename_format', '{locale}.{format}')
     i18n.set("skip_locale_root_data", True)
+
+
+def change_locale(locale: str) -> None:
+    i18n.set('locale', locale)

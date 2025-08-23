@@ -1,5 +1,8 @@
+from datetime import datetime
+
 import i18n
 from fastapi import HTTPException
+from passlib.hash import bcrypt
 from pydantic import EmailStr
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -28,5 +31,13 @@ class PasswordService(Service):
         return True
 
     async def change_password(self, data: ChangePasswordSchema):
-        query = select(PasswordReset).options(joinedload(PasswordReset.user))
+        query = (select(PasswordReset).filter(
+            PasswordReset.expires_in > datetime.utcnow(),
+            PasswordReset.code == data.code
+        ).options(joinedload(PasswordReset.user)))
         code = (await self.session.execute(query)).scalar()
+        if not code:
+            raise HTTPException(status_code=404, detail=i18n.t('user.incorrect_code'))
+        code.user.password = bcrypt.hash(data.password)
+        await self.session.commit()
+        return True

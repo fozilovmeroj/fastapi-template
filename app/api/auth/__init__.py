@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.connection import get_session
 from app.schemas.base import ResponseSchema
 from app.services.user_service import UserService
-from app.schemas.auth import SignInSchema, SignUpSchema, SignInResponse
+from app.schemas.auth.auth import SignInSchema, SignUpSchema, SignInResponse
 from app.schemas.users import UserSchema
 from app.utils.auth.auth import get_current_user
 

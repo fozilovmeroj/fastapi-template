@@ -17,3 +17,7 @@ class UserSchema(DBModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime | None
+
+
+class UserWithPasswordSchema(UserSchema):
+    password: str

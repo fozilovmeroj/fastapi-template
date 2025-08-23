@@ -20,10 +20,9 @@ async def forget_password(email: EmailStr, session=Depends(get_session)):
 
 @router.post("/change", response_model=ResponseSchema)
 async def change_password(form: ChangePasswordSchema, session=Depends(get_session)):
-    user_service = UserService(session)
-    # if not await user_service.change_password(form):
-    #     return ResponseSchema(status=False, message=i18n.t('user.incorrect_code'))
-    return ResponseSchema(status=True, message=i18n.t('user.code_sent'))
+    password_service = PasswordService(session)
+    await password_service.change_password(form)
+    return ResponseSchema(status=True, message='user.password_changed')
 
 
 @router.get("/reset", response_model=ResponseSchema)

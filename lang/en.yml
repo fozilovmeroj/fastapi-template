@@ -2,3 +2,4 @@ user:
   not_found: No such user
   code_sent: Code sent successfully
   incorrect_code: Incorrect or expired code
+  password_changed: Password successfully changes

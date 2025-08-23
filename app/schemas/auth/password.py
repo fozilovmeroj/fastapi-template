@@ -3,8 +3,7 @@ from pydantic import BaseModel, Field, field_validator
 from app.utils.auth.password import validate_password
 
 
-class ChangePasswordSchema(BaseModel):
-    code: int = Field(max_digits=6)
+class PasswordSchema(BaseModel):
     password: str
 
     @field_validator('password', mode='after')
@@ -13,3 +12,7 @@ class ChangePasswordSchema(BaseModel):
         if validate_password(value):
             return value
         raise ValueError("Not a valid password")
+
+
+class ChangePasswordSchema(PasswordSchema):
+    code: int = Field(ge=100_000, le=999_999)

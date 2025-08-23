@@ -5,18 +5,18 @@ from passlib.hash import bcrypt
 from sqlalchemy import select, or_
 
 from app.db.models.auth.auth import User, Token, UserLogin
-from app.schemas.users import UserSchema
+from app.schemas.users import UserWithPasswordSchema
 from app.services import Service
 from app.services.log_service import LogService
-from app.schemas.auth import SignUpSchema, SignInSchema, SignInResponse
+from app.schemas.auth.auth import SignUpSchema, SignInSchema, SignInResponse
 from app.utils.request import get_log_data
 
 
 class UserService(Service):
-    async def get_user(self, login: str) -> UserSchema | None:
+    async def get_user(self, login: str) -> UserWithPasswordSchema | None:
         query = select(User).where(or_(User.email == login, User.phone == login))
         user = (await self.session.execute(query)).scalars().first()
-        return UserSchema.model_validate(user) if user else None
+        return UserWithPasswordSchema.model_validate(user) if user else None
 
     async def is_unique(self, email: str, phone: str):
         stmt = select(User).where(or_(User.email == email, User.phone == phone))
