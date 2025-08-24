@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.orm.attributes import Mapped
 
 from app.db.base_models import WithTimeStamp, Base, int_pk
-from app.types.enums import GenderEnum
+from app.types.enums.gender import GenderEnum
 from app.utils.auth.token import default_token_expiry, default_code_expiry
 
 
@@ -56,4 +56,4 @@ class PasswordReset(Base):
     code: Mapped[int]
     expires_in: Mapped[datetime] = mapped_column(default=default_code_expiry)
 
-    user: Mapped["User"] = relationship("User" ,back_populates="password_resets")
+    user: Mapped["User"] = relationship("User", back_populates="password_resets")

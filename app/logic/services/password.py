@@ -8,11 +8,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from app.db.models.auth.auth import PasswordReset, User
+from app.db.models.auth.auth import PasswordReset
 from app.schemas.auth.password import ChangePasswordSchema
-from app.services import Service
-from app.services.user_service import UserService
-from app.utils.generators import generate_code, generate_password
+from app.logic.services.base import Service
+from app.logic.services.user_service import UserService
+from app.utils.generators.base import generate_code, generate_password
 
 
 class PasswordService(Service):

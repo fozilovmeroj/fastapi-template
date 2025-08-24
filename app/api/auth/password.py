@@ -1,12 +1,10 @@
-import i18n
 from fastapi import APIRouter, Depends
 from pydantic import EmailStr
 
 from app.db.connection import get_session
 from app.schemas.auth.password import ChangePasswordSchema
 from app.schemas.base import ResponseSchema
-from app.services.password import PasswordService
-from app.services.user_service import UserService
+from app.logic.services.password import PasswordService
 
 router = APIRouter(tags=["password"])
 

@@ -5,11 +5,10 @@ from passlib.hash import bcrypt
 from sqlalchemy import select, or_
 
 from app.db.models.auth.auth import User, Token, UserLogin
-from app.schemas.users import UserWithPasswordSchema
-from app.services import Service
-from app.services.log_service import LogService
-from app.schemas.auth.auth import SignUpSchema, SignInSchema, SignInResponse
-from app.utils.request import get_log_data
+from app.logic.services.base import Service
+from app.logic.services.log_service import LogService
+from app.schemas.auth.base import SignUpSchema, SignInSchema, SignInResponse
+from app.utils.request.base import get_log_data
 
 
 class UserService(Service):

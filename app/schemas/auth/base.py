@@ -4,8 +4,8 @@ from pydantic import EmailStr
 
 from app.schemas.auth.password import PasswordSchema
 from app.schemas.base import DBModel
-from app.schemas.users import UserSchema
-from app.types.enums import GenderEnum
+from app.schemas.users.base import UserSchema
+from app.types.enums.gender import GenderEnum
 
 
 class SignInSchema(DBModel, PasswordSchema):
