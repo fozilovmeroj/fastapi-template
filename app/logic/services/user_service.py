@@ -8,12 +8,18 @@ from app.db.models.auth.auth import User, Token, UserLogin
 from app.logic.services.base import Service
 from app.logic.services.log_service import LogService
 from app.schemas.auth.base import SignUpSchema, SignInSchema, SignInResponse
+from app.schemas.users.base import UserSchema
 from app.utils.request.base import get_log_data
 
 
 class UserService(Service):
     async def get_user(self, login: str) -> User | None:
         query = select(User).where(or_(User.email == login, User.phone == login))
+        user = (await self.session.execute(query)).scalars().first()
+        return user
+
+    async def get_user_by_id(self, id: int) -> User | None:
+        query = select(User).where(User.id == id)
         user = (await self.session.execute(query)).scalars().first()
         return user
 
@@ -29,11 +35,11 @@ class UserService(Service):
             if user.phone == phone:
                 raise HTTPException(status_code=400, detail="Phone already exists")
 
-    async def sign_up(self, form: SignUpSchema) -> User:
+    async def sign_up(self, form: SignUpSchema) -> UserSchema:
         user = User(**form.model_dump())
         user.password = bcrypt.hash(user.password)
         self.session.add(user)
-        return user
+        return UserSchema.model_validate(user)
 
     async def sign_in(self, form: SignInSchema, request: Request) -> SignInResponse:
         user = await self.get_user(form.login)
