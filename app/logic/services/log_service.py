@@ -2,7 +2,7 @@ from fastapi import Request
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from app.db.models.logging import Log
-from app.types.enums.log_level import LogLevelEnum
+from app.core.types.enums.log_level import LogLevelEnum
 from app.utils.request.base import get_log_data
 
 

@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 
+from app.core.types.constants import rules
+from app.core.types.exceptions.password import PasswordValidationError
 from app.utils.auth.password import validate_password
 
 
@@ -11,7 +13,7 @@ class PasswordSchema(BaseModel):
     def password_validator(cls, value: str) -> str:
         if validate_password(value):
             return value
-        raise ValueError("Not a valid password")
+        raise PasswordValidationError(rules.NOT_VALID_PASSWORD, rules.PASSWORD_REQUIREMENTS)
 
 
 class ChangePasswordSchema(PasswordSchema):

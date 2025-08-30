@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from sqlalchemy import String, ForeignKey, func
+from sqlalchemy import String, ForeignKey, func, DateTime
 from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.orm.attributes import Mapped
 
 from app.db.base_models import WithTimeStamp, Base, int_pk
-from app.types.enums.gender import GenderEnum
+from app.core.types.enums.gender import GenderEnum
 from app.utils.auth.token import default_token_expiry, default_code_expiry
 
 
@@ -17,7 +17,7 @@ class User(WithTimeStamp):
     name: Mapped[str]
     password: Mapped[str]
     gender: Mapped[GenderEnum] = mapped_column(String(10), default="male")
-    date_of_birth: Mapped[datetime | None]
+    date_of_birth: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     phone: Mapped[str | None] = mapped_column(String(20))
     address: Mapped[str | None]
     is_active: Mapped[bool] = mapped_column(default=True)

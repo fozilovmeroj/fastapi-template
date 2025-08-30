@@ -14,10 +14,12 @@ class WithTimeStamp(Base):
     __abstract__ = True
 
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
-    updated_at: Mapped[datetime | None] = mapped_column(onupdate=datetime.utcnow())
+    updated_at: Mapped[datetime | None] = mapped_column(onupdate=lambda: datetime.now())
+
 
 class SoftDelete(Base):
     __abstract__ = True
     deleted_at: Mapped[datetime | None] = mapped_column()
+
 
 int_pk = Annotated[int, mapped_column(primary_key=True)]

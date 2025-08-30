@@ -5,7 +5,7 @@ from pydantic import EmailStr
 from app.schemas.auth.password import PasswordSchema
 from app.schemas.base import DBModel
 from app.schemas.users.base import UserSchema
-from app.types.enums.gender import GenderEnum
+from app.core.types.enums.gender import GenderEnum
 
 
 class SignInSchema(DBModel, PasswordSchema):

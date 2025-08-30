@@ -1,4 +1,3 @@
-import i18n
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,11 +12,9 @@ router = APIRouter(tags=["auth"])
 
 
 @router.post("/sign-up", response_model=ResponseSchema[UserSchema])
-async def sign_up(form: SignUpSchema, session: AsyncSession = Depends(get_session)):
-    user_service = UserService(session)
-    await user_service.is_unique(email=form.email, phone=form.phone)
-    user = await user_service.sign_up(form)
-    return ResponseSchema(message='auth.sign_up.success')
+async def sign_up(form: SignUpSchema):
+    user = await UserService.sign_up(form)
+    return ResponseSchema(message='auth.sign_up.success', data=user)
 
 
 @router.post("/sign-in", response_model=ResponseSchema[SignInResponse])

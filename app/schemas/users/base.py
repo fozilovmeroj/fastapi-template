@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import EmailStr
 
 from app.schemas.base import DBModel
-from app.types.enums.gender import GenderEnum
+from app.core.types.enums.gender import GenderEnum
 
 
 class UserSchema(DBModel):

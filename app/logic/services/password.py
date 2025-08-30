@@ -9,19 +9,18 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from app.db.models.auth.auth import PasswordReset
+from app.logic.repositories.user_repository import UserRepository
 from app.schemas.auth.password import ChangePasswordSchema
 from app.logic.services.base import Service
-from app.logic.services.user_service import UserService
 from app.utils.generators.base import generate_code, generate_password
 
 
 class PasswordService(Service):
     def __init__(self, session: AsyncSession):
         super().__init__(session)
-        self.user_service = UserService(self.session)
 
     async def generate_reset_password(self, email: EmailStr) -> bool:
-        user = await self.user_service.get_user(email)
+        user = await UserRepository.get_by_login(email)
         if not user:
             raise HTTPException(status_code=404, detail=i18n.t('user.not_found'))
         code = generate_code()
@@ -43,7 +42,7 @@ class PasswordService(Service):
         return True
 
     async def reset_password(self, email: EmailStr):
-        user = await self.user_service.get_user(email)
+        user = await UserRepository.get_by_login(email)
         if not user:
             raise HTTPException(status_code=404, detail=i18n.t('user.not_found'))
         new_password = generate_password()

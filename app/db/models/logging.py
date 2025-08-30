@@ -1,17 +1,17 @@
-from sqlalchemy import String, ForeignKey, Text, Enum
+from sqlalchemy import String, ForeignKey, Text
 from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.orm.attributes import Mapped
 from sqlalchemy_utils import generic_relationship
 
 from app.db.base_models import WithTimeStamp, int_pk
-from app.types.enums.log_level import LogLevelEnum
+from app.core.types.enums.log_level import LogLevelEnum
 
 
 class Log(WithTimeStamp):
     __tablename__ = "logs"
 
     id: Mapped[int_pk]
-    level: Mapped[LogLevelEnum] = mapped_column(String(50) ,default=LogLevelEnum.INFO)
+    level: Mapped[LogLevelEnum] = mapped_column(String(50), default=LogLevelEnum.INFO)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     action: Mapped[str]
     object_type: Mapped[str]
