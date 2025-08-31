@@ -4,7 +4,7 @@ from sqlalchemy import String, ForeignKey, func, DateTime
 from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.orm.attributes import Mapped
 
-from app.db.base_models import WithTimeStamp, Base, int_pk
+from app.db.models.base import WithTimeStamp, Base, int_pk
 from app.core.types.enums.gender import GenderEnum
 from app.utils.auth.token import default_token_expiry, default_code_expiry
 

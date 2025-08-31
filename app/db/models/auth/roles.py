@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.orm.attributes import Mapped
 
-from app.db.base_models import WithTimeStamp, int_pk, Base
+from app.db.models.base import WithTimeStamp, int_pk, Base
 
 
 class Permission(Base):
@@ -21,6 +21,7 @@ class Role(WithTimeStamp):
     name: Mapped[str]
 
     permissions: Mapped[list["Permission"]] = relationship(secondary="role_permission", back_populates="roles")
+
 
 class RolePermission(Base):
     __tablename__ = "role_permission"

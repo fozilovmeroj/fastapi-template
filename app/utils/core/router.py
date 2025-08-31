@@ -6,7 +6,7 @@ from fastapi import FastAPI
 
 
 def load_routers(
-    app: FastAPI, path: Path, base_module: str = "app.api", prefix: str = ""
+        app: FastAPI, path: Path, base_module: str = "app.api", prefix: str = ""
 ) -> None:
     """
     Recursively load all FastAPI routers from a given package.

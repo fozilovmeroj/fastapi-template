@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.orm.attributes import Mapped
 from sqlalchemy_utils import generic_relationship
 
-from app.db.base_models import WithTimeStamp, int_pk
+from app.db.models.base import WithTimeStamp, int_pk
 from app.core.types.enums.log_level import LogLevelEnum
 
 
