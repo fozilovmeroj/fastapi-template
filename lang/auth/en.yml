@@ -1,2 +1,9 @@
 sign_up:
   success: Successful sign up
+users:
+  got: User got successfully
+  got_all: Users got successfully
+  created: User successfully created
+roles:
+  got: Role got successfully
+  got_all: Roles got successfully

@@ -12,28 +12,28 @@ from app.schemas.users.base import UserSchema, UserCreate, UserUpdate
 router = APIRouter(tags=["users"])
 
 
-@router.get("/", response_model=list[UserSchema])
+@router.get("/", response_model=ResponseSchema[list[UserSchema]])
 async def get_users():
-    return await UserRepository.get_all()
+    return ResponseSchema[list[UserSchema]](status=True, message="auth.users.got_all",
+                                            data=await UserRepository.get_all())
 
 
 @router.get("/{id}", response_model=ResponseSchema[UserSchema])
 async def get_user(id: int):
-    return await UserRepository.get_by_id(id)
+    return ResponseSchema[UserSchema](status=True, message="auth.users.got",
+                                      data=await UserRepository.get_by_id(id))
 
 
 @router.post("/", response_model=ResponseSchema[UserSchema])
 async def create_user(data: UserCreate):
-    return await UserRepository.create(data.model_dump())
+    return ResponseSchema[UserSchema](status=True, message="auth.users.created",
+                                      data=await UserRepository.create(data.model_dump()))
 
 
 @router.put("/{id}", response_model=ResponseSchema[UserSchema])
 async def edit_user(id: int, data: UserUpdate):
-    return await UserRepository.update(id, data.model_dump(exclude_unset=True))
-    query = select(User)
-    result = await session.execute(query)
-    users = result.scalars().all()
-    return users
+    return ResponseSchema[UserSchema](status=True, message="auth.users.updated",
+                                      data=await UserRepository.update(id, data.model_dump(exclude_unset=True)))
 
 
 @router.delete("/{id}", response_model=ResponseSchema[UserSchema])

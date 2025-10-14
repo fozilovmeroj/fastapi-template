@@ -46,3 +46,12 @@ class UserRepository:
             # session.add(user)
             await session.commit()
         return user
+
+    @classmethod
+    async def delete(cls, user_id: int) -> User:
+        async with (async_session() as session):
+            user = await cls.get_by_id(user_id)
+            # user.password = bcrypt.hash(user.password)
+            # session.add(user)
+            await session.commit()
+        return user
