@@ -1,7 +1,7 @@
 import sys
 from types import ModuleType
 
-from app.utils.core.alembic import import_all_models
+from app.core.utils.alembic import import_all_models
 
 
 def test_import_all_models(tmp_path, monkeypatch):

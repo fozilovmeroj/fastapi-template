@@ -6,7 +6,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from app.utils.core.router import load_routers
+from app.core.utils.router import load_routers
 
 
 def create_router_file(path: Path, name: str, route_path: str, response: str):

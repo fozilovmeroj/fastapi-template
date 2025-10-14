@@ -2,7 +2,9 @@ import importlib
 import pkgutil
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
+
+from app.schemas.base import DBModel
 
 
 def load_routers(
@@ -21,3 +23,8 @@ def load_routers(
             app.include_router(router, prefix=prefix + f"/{name.split('.')[0]}")
         if is_pkg:
             load_routers(app, full_path, module_name, prefix + f"/{name}")
+
+
+def crud_routes(router: APIRouter, model: DBModel) -> None:
+    # TODO: make crud routes maker
+    pass
