@@ -7,14 +7,14 @@ from pydantic import EmailStr
 from app.db.models.auth.auth import User, Token, UserLogin
 from app.logic.repositories.token_repository import TokenRepository
 from app.logic.repositories.user_repository import UserRepository
-from app.logic.services.base import Service
+from app.logic.services.base import WithSession
 from app.logic.services.log_service import LogService
 from app.schemas.auth.base import SignUpSchema, SignInSchema, SignInResponse
 from app.schemas.users.base import UserSchema
 from app.utils.request.base import get_log_data
 
 
-class UserService(Service):
+class UserService(WithSession):
     @staticmethod
     async def is_unique(email: EmailStr, phone: str):
         user = await UserRepository.get_by_login(str(email), phone)
@@ -44,7 +44,7 @@ class UserService(Service):
             self.session.add(user_login)
             await self.session.commit()
 
-            log_service = LogService(self.session)
+            log_service = LogService()
             await log_service.info(user_id=user.id, object=user_login, action="sign in", request=request)
 
             return SignInResponse(user=UserSchema.model_validate(user), token=access_token)

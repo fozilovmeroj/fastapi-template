@@ -16,12 +16,16 @@ def generate_password(length=12, use_special=True):
     password = [
         secrets.choice(lower),
         secrets.choice(upper),
-        secrets.choice(digits),
-        secrets.choice(special)
+        secrets.choice(digits)
     ]
 
-    all_chars = lower + upper + digits + special
-    password += [secrets.choice(all_chars) for _ in range(length - 4)]
+    if use_special:
+        password.append(secrets.choice(special))
+        all_chars = lower + upper + digits + special
+    else:
+        all_chars = lower + upper + digits
+
+    password += [secrets.choice(all_chars) for _ in range(length - len(password))]
 
     secrets.SystemRandom().shuffle(password)
 

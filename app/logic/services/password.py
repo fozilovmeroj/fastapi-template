@@ -5,22 +5,18 @@ from fastapi import HTTPException
 from passlib.hash import bcrypt
 from pydantic import EmailStr
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from app.db.models.auth.auth import PasswordReset
 from app.logic.repositories.user_repository import UserRepository
 from app.schemas.auth.password import ChangePasswordSchema
-from app.logic.services.base import Service
+from app.logic.services.base import WithSession
 from app.utils.generators.base import generate_code, generate_password
 
 
-class PasswordService(Service):
-    def __init__(self, session: AsyncSession):
-        super().__init__(session)
-
+class PasswordService(WithSession):
     async def generate_reset_password(self, email: EmailStr) -> bool:
-        user = await UserRepository.get_by_login(email)
+        user = await UserRepository.get_by_login(str(email))
         if not user:
             raise HTTPException(status_code=404, detail=i18n.t('user.not_found'))
         code = generate_code()
@@ -42,7 +38,7 @@ class PasswordService(Service):
         return True
 
     async def reset_password(self, email: EmailStr):
-        user = await UserRepository.get_by_login(email)
+        user = await UserRepository.get_by_login(str(email))
         if not user:
             raise HTTPException(status_code=404, detail=i18n.t('user.not_found'))
         new_password = generate_password()

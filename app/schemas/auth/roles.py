@@ -10,3 +10,8 @@ class RoleSchema(DBModel):
     id: int
     name: str
     permissions: list[PermissionSchema]
+
+
+class RoleCreateUpdate(DBModel):
+    name: str
+    permissions: list[int]
