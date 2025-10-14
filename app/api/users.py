@@ -37,8 +37,6 @@ async def edit_user(id: int, data: UserUpdate):
 
 
 @router.delete("/{id}", response_model=ResponseSchema[UserSchema])
-async def delete_user(id: int, session: AsyncSession = Depends(get_session)):
-    query = select(User)
-    result = await session.execute(query)
-    users = result.scalars().all()
-    return users
+async def delete_user(id: int):
+    return ResponseSchema[UserSchema](status=True, message="auth.users.deleted",
+                                      data=await UserRepository.delete(id))

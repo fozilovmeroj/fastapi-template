@@ -3,6 +3,7 @@ from typing import Any, Sequence
 from sqlalchemy import select, or_
 from passlib.hash import bcrypt
 
+from app.core.types.exceptions.db import NotFoundModelError
 from app.db.connection import async_session
 from app.db.models.auth.auth import User
 
@@ -42,16 +43,26 @@ class UserRepository:
     async def update(cls, user_id: int, data: dict[str, Any]) -> User:
         async with (async_session() as session):
             user = await cls.get_by_id(user_id)
-            # user.password = bcrypt.hash(user.password)
-            # session.add(user)
+            if not user:
+                raise NotFoundModelError(id=user_id, model="user")
+
+            for key, value in data.items():
+                setattr(user, key, value)
+            if data["password"]:
+                user.password = bcrypt.hash(user.password)
+
+            session.add(user)
             await session.commit()
+            await session.refresh(user)
         return user
 
     @classmethod
     async def delete(cls, user_id: int) -> User:
         async with (async_session() as session):
             user = await cls.get_by_id(user_id)
-            # user.password = bcrypt.hash(user.password)
-            # session.add(user)
+            if not user:
+                raise NotFoundModelError(id=user_id, model="user")
+
+            await session.delete(user)
             await session.commit()
         return user
