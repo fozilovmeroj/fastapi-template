@@ -9,6 +9,9 @@ class PermissionSchema(DBModel):
 class RoleSchema(DBModel):
     id: int
     name: str
+
+
+class RoleWithPermissionsSchema(RoleSchema):
     permissions: list[PermissionSchema]
 
 
