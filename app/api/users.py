@@ -1,10 +1,4 @@
 from fastapi import APIRouter
-from fastapi.params import Depends
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.db.connection import get_session
-from app.db.models.auth.auth import User
 from app.logic.repositories.user_repository import UserRepository
 from app.schemas.base import ResponseSchema
 from app.schemas.users.base import UserSchema, UserCreate, UserUpdate
