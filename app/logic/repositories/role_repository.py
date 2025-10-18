@@ -38,14 +38,12 @@ class RoleRepository:
             if not role:
                 raise NotFoundModelError(id=role_id, model="role")
 
-            for key, value in data.model_dump(exclude_unset=True).items():
-                setattr(role, key, value)
-
+            role.name = data.name
             session.add(role)
             await session.commit()
             await session.refresh(role)
         return role
-
+    
     @classmethod
     async def delete(cls, role_id: int) -> Role:
         async with (async_session() as session):

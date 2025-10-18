@@ -13,18 +13,18 @@ router = APIRouter(tags=["password"])
 async def forget_password(email: EmailStr, session=Depends(get_session)):
     password_service = PasswordService(session)
     await password_service.generate_reset_password(email)
-    return ResponseSchema(status=True, message='user.code_sent')
+    return ResponseSchema(status=True, message='auth.sign.code_sent')
 
 
 @router.post("/change", response_model=ResponseSchema)
 async def change_password(form: ChangePasswordSchema, session=Depends(get_session)):
     password_service = PasswordService(session)
     await password_service.change_password(form)
-    return ResponseSchema(status=True, message='user.password_changed')
+    return ResponseSchema(status=True, message='auth.sign.password_changed')
 
 
 @router.get("/reset", response_model=ResponseSchema)
 async def reset_password(email: EmailStr, session=Depends(get_session)):
     password_service = PasswordService(session)
     await password_service.reset_password(email)
-    return ResponseSchema(status=True, message='user.password_reset')
+    return ResponseSchema(status=True, message='auth.sign.password_reset')

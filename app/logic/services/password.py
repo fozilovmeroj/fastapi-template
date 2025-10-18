@@ -18,7 +18,7 @@ class PasswordService(WithSession):
     async def generate_reset_password(self, email: EmailStr) -> bool:
         user = await UserRepository.get_by_login(str(email))
         if not user:
-            raise HTTPException(status_code=404, detail=i18n.t('user.not_found'))
+            raise HTTPException(status_code=404, detail=i18n.t('auth.users.not_found'))
         code = generate_code()
         reset_password = PasswordReset(code=code, user_id=user.id)
         self.session.add(reset_password)
@@ -32,7 +32,7 @@ class PasswordService(WithSession):
         ).options(joinedload(PasswordReset.user)))
         code = (await self.session.execute(query)).scalar()
         if not code:
-            raise HTTPException(status_code=404, detail=i18n.t('user.incorrect_code'))
+            raise HTTPException(status_code=404, detail=i18n.t('auth.sign.incorrect_code'))
         code.user.password = bcrypt.hash(data.password)
         await self.session.commit()
         return True
@@ -40,7 +40,7 @@ class PasswordService(WithSession):
     async def reset_password(self, email: EmailStr):
         user = await UserRepository.get_by_login(str(email))
         if not user:
-            raise HTTPException(status_code=404, detail=i18n.t('user.not_found'))
+            raise HTTPException(status_code=404, detail=i18n.t('auth.users.not_found'))
         new_password = generate_password()
         user.password = bcrypt.hash(new_password)
         await self.session.commit()
