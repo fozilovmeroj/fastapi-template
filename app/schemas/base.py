@@ -13,7 +13,7 @@ class DBModel(BaseModel):
 class ResponseSchema(BaseModel, Generic[T]):
     status: bool = True
     message: str
-    data: T | None = None
+    data: T = None
 
     @field_validator("message", mode="after")
     @classmethod

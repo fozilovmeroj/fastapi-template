@@ -25,14 +25,14 @@ class UserRepository:
 
     @staticmethod
     async def get_by_login(login: str, phone: str | None = None) -> User:
-        async with (async_session() as session):
+        async with async_session() as session:
             stmt = select(User).where(or_(User.email == login, User.phone == (phone or login)))
             user = (await session.execute(stmt)).scalar()
             return user
 
     @staticmethod
     async def create(data: dict[str, Any]) -> User:
-        async with (async_session() as session):
+        async with async_session() as session:
             user = User(**data)
             user.password = bcrypt.hash(user.password)
             session.add(user)
@@ -41,7 +41,7 @@ class UserRepository:
 
     @classmethod
     async def update(cls, user_id: int, data: dict[str, Any]) -> User:
-        async with (async_session() as session):
+        async with async_session() as session:
             user = await cls.get_by_id(user_id)
             if not user:
                 raise NotFoundModelError(id=user_id, model="user")
@@ -58,7 +58,7 @@ class UserRepository:
 
     @classmethod
     async def delete(cls, user_id: int) -> User:
-        async with (async_session() as session):
+        async with async_session() as session:
             user = await cls.get_by_id(user_id)
             if not user:
                 raise NotFoundModelError(id=user_id, model="user")

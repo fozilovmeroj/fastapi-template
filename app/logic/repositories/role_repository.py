@@ -25,7 +25,7 @@ class RoleRepository:
 
     @staticmethod
     async def create(data: RoleCreateUpdate) -> Role:
-        async with (async_session() as session):
+        async with async_session() as session:
             role = Role(name=data.name)
             session.add(role)
             await session.commit()
@@ -33,7 +33,7 @@ class RoleRepository:
 
     @classmethod
     async def update(cls, role_id: int, data: RoleCreateUpdate) -> Role:
-        async with (async_session() as session):
+        async with async_session() as session:
             role = await cls.get_by_id(role_id)
             if not role:
                 raise NotFoundModelError(id=role_id, model="role")
@@ -46,7 +46,7 @@ class RoleRepository:
     
     @classmethod
     async def delete(cls, role_id: int) -> Role:
-        async with (async_session() as session):
+        async with async_session() as session:
             role = await cls.get_by_id(role_id)
             if not role:
                 raise NotFoundModelError(id=role_id, model="role")

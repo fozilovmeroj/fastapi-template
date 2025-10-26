@@ -4,17 +4,17 @@ from fastapi import Request, HTTPException
 from passlib.hash import bcrypt
 from pydantic import EmailStr
 
+from app.db.connection import async_session
 from app.db.models.auth.auth import User, Token, UserLogin
 from app.logic.repositories.token_repository import TokenRepository
 from app.logic.repositories.user_repository import UserRepository
-from app.logic.services.base import WithSession
 from app.logic.services.log_service import LogService
 from app.schemas.auth.base import SignUpSchema, SignInSchema, SignInResponse
 from app.schemas.users.base import UserSchema
 from app.utils.request.base import get_log_data
 
 
-class UserService(WithSession):
+class UserService:
     @staticmethod
     async def is_unique(email: EmailStr, phone: str):
         user = await UserRepository.get_by_login(str(email), phone)
@@ -41,8 +41,9 @@ class UserService(WithSession):
 
             user_login = UserLogin(**get_log_data(request), user_id=user.id)
 
-            self.session.add(user_login)
-            await self.session.commit()
+            async with async_session() as session:
+                session.add(user_login)
+                await session.commit()
 
             log_service = LogService()
             await log_service.info(user_id=user.id, object_model=user_login, action="sign in", request=request)
