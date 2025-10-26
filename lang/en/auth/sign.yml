@@ -1,4 +1,5 @@
 sign_up: Successful sign up
+sign_in: Successful sign in
 code_sent: Code sent successfully
 incorrect_code: Incorrect or expired code
 password_changed: Password successfully changed

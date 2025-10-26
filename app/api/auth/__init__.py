@@ -14,16 +14,16 @@ router = APIRouter(tags=["auth"])
 @router.post("/sign-up", response_model=ResponseSchema[UserSchema])
 async def sign_up(form: SignUpSchema):
     user = await UserService.sign_up(form)
-    return ResponseSchema(message='auth.sign_up.success', data=user)
+    return ResponseSchema(message='auth.sign.sign_up', data=user)
 
 
 @router.post("/sign-in", response_model=ResponseSchema[SignInResponse])
 async def sign_in(form: SignInSchema, request: Request, session: AsyncSession = Depends(get_session)):
     user_service = UserService(session)
     data = await user_service.sign_in(form, request)
-    return ResponseSchema(message="", data=data)
+    return ResponseSchema(message="auth.sign.sign_in", data=data)
 
 
-@router.get("/me", response_model=UserSchema)
+@router.get("/me", response_model=ResponseSchema[UserSchema], dependencies=[Depends(get_current_user)])
 async def me(user=Depends(get_current_user)):
-    return user
+    return ResponseSchema(message="auth.users.got", data=user)

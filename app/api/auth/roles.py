@@ -1,12 +1,13 @@
 import i18n
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
 from app.core.types.exceptions.db import NotFoundModelError
 from app.logic.repositories.role_repository import RoleRepository
 from app.schemas.auth.roles import RoleSchema, RoleCreateUpdate
 from app.schemas.base import ResponseSchema
+from app.utils.auth.auth import get_current_user
 
-router = APIRouter(tags=["roles"])
+router = APIRouter(tags=["roles"], dependencies=[Depends(get_current_user)])
 
 
 @router.get("/", response_model=ResponseSchema[list[RoleSchema]])
@@ -18,7 +19,6 @@ async def get_roles():
 @router.get("/{id}", response_model=ResponseSchema[RoleSchema])
 async def get_role(id: int):
     user = await RoleRepository.get_by_id(id)
-    i18n.set("locale", "ru")
     if user is None:
         raise HTTPException(status_code=404, detail=i18n.t("auth.roles.not_found"))
     return ResponseSchema[RoleSchema](status=True, message="auth.roles.got",

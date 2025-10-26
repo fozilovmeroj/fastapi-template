@@ -28,3 +28,4 @@ class TokenRepository:
         async with (async_session() as session):
             token = Token(access_token=access_token, user_id=user_id)
             session.add(token)
+            await session.commit()

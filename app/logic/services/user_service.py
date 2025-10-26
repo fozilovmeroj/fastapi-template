@@ -45,7 +45,7 @@ class UserService(WithSession):
             await self.session.commit()
 
             log_service = LogService()
-            await log_service.info(user_id=user.id, object=user_login, action="sign in", request=request)
+            await log_service.info(user_id=user.id, object_model=user_login, action="sign in", request=request)
 
             return SignInResponse(user=UserSchema.model_validate(user), token=access_token)
         else:
