@@ -1,8 +1,8 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-import i18n
 from fastapi import FastAPI
+from fastapi_offline import FastAPIOffline
 
 from app.core.plugins.i18n import init_i18n
 from app.core.utils.router import load_routers
@@ -14,7 +14,7 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPIOffline(lifespan=lifespan)
 
 # Load router from app.api package
 api_dir = Path(__file__).parent / "api"
