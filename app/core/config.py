@@ -10,3 +10,6 @@ ALEMBIC_DATABASE_URL: str = os.getenv(
     "ALEMBIC_DATABASE_URL", default="sqlite:///app.db"
 )
 LOCALE: str = os.getenv("LOCALE", default="en")
+ORIGINS: list[str] = [
+    "*"
+]
