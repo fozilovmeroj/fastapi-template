@@ -14,7 +14,6 @@ def init_i18n() -> None:
     i18n.set("file_format", "yml")
     i18n.set("filename_format", "{namespace}.{format}")
     i18n.set("skip_locale_root_data", True)
-    i18n.set("use_locale_dirs", True)
 
 
 def change_locale(locale: str) -> None:
