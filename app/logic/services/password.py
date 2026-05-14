@@ -1,8 +1,8 @@
 from datetime import datetime
 
+import bcrypt
 import i18n
 from fastapi import HTTPException
-from passlib.hash import bcrypt
 from pydantic import EmailStr
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
@@ -33,7 +33,7 @@ class PasswordService(WithSession):
         code = (await self.session.execute(query)).scalar()
         if not code:
             raise HTTPException(status_code=404, detail=i18n.t('auth.sign.incorrect_code'))
-        code.user.password = bcrypt.hash(data.password)
+        code.user.password = bcrypt.hashpw(data.password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         await self.session.commit()
         return True
 
@@ -42,6 +42,6 @@ class PasswordService(WithSession):
         if not user:
             raise HTTPException(status_code=404, detail=i18n.t('auth.users.not_found'))
         new_password = generate_password()
-        user.password = bcrypt.hash(new_password)
+        user.password = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         await self.session.commit()
         return True

@@ -1,7 +1,7 @@
 import secrets
 
+import bcrypt
 from fastapi import Request, HTTPException
-from passlib.hash import bcrypt
 from pydantic import EmailStr
 
 from app.db.connection import async_session
@@ -32,10 +32,11 @@ class UserService:
         user = await UserRepository.create(form.model_dump())
         return UserSchema.model_validate(user)
 
-    async def sign_in(self, form: SignInSchema, request: Request) -> SignInResponse:
+    @classmethod
+    async def sign_in(cls, form: SignInSchema, request: Request) -> SignInResponse:
         user = await UserRepository.get_by_login(form.login)
 
-        if bcrypt.verify(form.password, user.password):
+        if user and bcrypt.checkpw(form.password.encode("utf-8"), user.password.encode("utf-8")):
             access_token = secrets.token_hex(32)
             await TokenRepository.create(user.id, access_token)
 

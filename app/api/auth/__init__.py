@@ -19,8 +19,7 @@ async def sign_up(form: SignUpSchema):
 
 @router.post("/sign-in", response_model=ResponseSchema[SignInResponse])
 async def sign_in(form: SignInSchema, request: Request, session: AsyncSession = Depends(get_session)):
-    user_service = UserService(session)
-    data = await user_service.sign_in(form, request)
+    data = await UserService.sign_in(form, request)
     return ResponseSchema(message="auth.sign.sign_in", data=data)
 
 

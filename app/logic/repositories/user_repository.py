@@ -1,7 +1,7 @@
 from typing import Any, Sequence
 
 from sqlalchemy import select, or_
-from passlib.hash import bcrypt
+import bcrypt
 
 from app.core.types.exceptions.db import NotFoundModelError
 from app.db.connection import async_session
@@ -34,7 +34,7 @@ class UserRepository:
     async def create(data: dict[str, Any]) -> User:
         async with async_session() as session:
             user = User(**data)
-            user.password = bcrypt.hash(user.password)
+            user.password = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt()).decode("utf8")
             session.add(user)
             await session.commit()
         return user

@@ -10,7 +10,6 @@ dependencies = [
     "fastapi-offline>=1.7.5",
     "fastapi[all]>=0.115.12",
     "i18nice[yaml]>=0.16.0",
-    "passlib>=1.7.4",
     "psycopg2>=2.9.10",
     "pydantic>=2.11.4",
     "python-dotenv>=1.1.0",
@@ -37,3 +36,9 @@ exclude = [
 [[tool.mypy.overrides]]
 module = ["i18n.*"]
 follow_untyped_imports = true
+
+[tool.setuptools]
+packages = ["cli", "app", "lang"]
+
+[project.scripts]
+nexus = "cli.__main__:main"

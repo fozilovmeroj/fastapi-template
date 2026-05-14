@@ -1,8 +1,4 @@
-import secrets
-from typing import Any
-
 from sqlalchemy import select, or_
-from passlib.hash import bcrypt
 
 from app.db.connection import async_session
 from app.db.models.auth.auth import User, Token

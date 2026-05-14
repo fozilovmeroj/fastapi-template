@@ -13,7 +13,7 @@ class UserSchema(DBModel):
     name: str
     gender: GenderEnum
     date_of_birth: datetime | None
-    phone: str
+    phone: str | None
     address: str | None
     is_active: bool
     created_at: datetime

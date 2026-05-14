@@ -6,6 +6,7 @@ from sqlalchemy.orm.attributes import Mapped
 
 from app.db.models.base import WithTimeStamp, Base, int_pk
 from app.core.types.enums.gender import GenderEnum
+from app.db.models.logging import Log
 from app.utils.auth.token import default_token_expiry, default_code_expiry
 
 
